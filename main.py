@@ -715,17 +715,22 @@ if __name__ == "__main__":
         folder_to_save_reports_to=None,
         skip_previously_forecasted_questions=True,
         extra_metadata_in_explanation=True,
-        # llms={
-        #     "default": GeneralLlm(
-        #         model="openrouter/openai/gpt-4o",
-        #         temperature=0.3,
-        #         timeout=40,
-        #         allowed_tries=2,
-        #     ),
-        #     "summarizer": "openai/gpt-4o-mini",
-        #     "researcher": "asknews/news-summaries",
-        #     "parser": "openai/gpt-4o-mini",
-        # },
+        llms={
+            "default": GeneralLlm(
+                model="openrouter/google/gemini-3.8-flash",
+                temperature=0.3,
+                timeout=90,
+                allowed_tries=2,
+            ),
+            "summarizer": "openrouter/google/gemini-3.5-flash-lite",
+            "researcher": GeneralLlm(
+                model="openrouter/perplexity/sonar",
+                temperature=0.1,
+                timeout=90,
+                allowed_tries=2,
+            ),
+            "parser": "openrouter/google/gemini-3.5-flash-lite",
+        },
     )
 
     # Per-mode tournament URL shown in the summary banner footer. These
