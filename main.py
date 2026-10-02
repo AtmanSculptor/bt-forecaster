@@ -309,13 +309,26 @@ class FallTemplateBot2026(ForecastBot):
 
             Today is {datetime.now().strftime("%Y-%m-%d")}.
 
-            Before answering you write:
-            (a) The time left until the outcome to the question is known.
-            (b) The status quo outcome if nothing changed.
-            (c) A description of a scenario that results in an unexpected outcome.
+            Work in two stages.
+
+            STAGE 1, OUTSIDE VIEW. Using the historical context:
+            (a) Paraphrase the question and resolution criteria in under 30 words, including the time window and exactly how each option is defined. Bait-and-switch errors are costly.
+            (b) Reference class: how have comparable cases been distributed across these options historically? Pick the best fitting reference class.
+            (c) Timeframe: state how long until resolution.
+            (d) State an outside view distribution across the options.
+
+            STAGE 2, INSIDE VIEW. Using the current news:
+            (e) Weigh each piece of evidence as strong (multiple independent reliable sources, clear causal mechanism, hard-to-change structural factors), moderate (single reliable source, indirect causal link, trend with momentum), or weak (anecdote, speculation, volatile short-term indicator).
+            (f) Justify every shift away from the outside view distribution.
+            (g) The status quo outcome if nothing changed, and a brief scenario that produces an unexpected option.
+
+            CHECKLIST before the numbers:
+            1. Blind spot: name the one scenario most likely to make this forecast look silly in hindsight.
+            2. Status quo: the world changes slowly most of the time. Consider a nudge toward the status quo option.
+            3. Leave some moderate probability on most options to account for unexpected outcomes.
+            4. Probabilities must sum to 100.
 
             {self._get_conditional_disclaimer_if_necessary(question)}
-            You write your rationale remembering that (1) good forecasters put extra weight on the status quo outcome since the world changes slowly most of the time, and (2) good forecasters leave some moderate probability on most options to account for unexpected outcomes.
 
             The last thing you write is your final probabilities for the N options in this order {question.options} as:
             Option_A: Probability_A
@@ -395,16 +408,26 @@ class FallTemplateBot2026(ForecastBot):
             - Never use scientific notation.
             - Always start with a smaller number (more negative if negative) and then increase from there. The value for percentile 10 should always be less than the value for percentile 20, and so on.
 
-            Before answering you write:
-            (a) The time left until the outcome to the question is known.
-            (b) The outcome if nothing changed.
-            (c) The outcome if the current trend continued.
-            (d) The expectations of experts and markets.
-            (e) A brief description of an unexpected scenario that results in a low outcome.
-            (f) A brief description of an unexpected scenario that results in a high outcome.
+            Work in two stages.
+
+            STAGE 1, OUTSIDE VIEW. Using the historical context:
+            (a) Paraphrase the question and resolution criteria in under 30 words, including the time window, the units, and exactly what is being measured. Bait-and-switch errors are costly.
+            (b) Reference class: what have comparable values been over comparable windows? Give the historical range and typical value. Pick the best fitting reference class.
+            (c) Timeframe: state how long until resolution and how much this quantity typically moves over windows of that length.
+            (d) State an outside view central estimate and a 10th to 90th percentile range.
+
+            STAGE 2, INSIDE VIEW. Using the current news:
+            (e) The outcome if nothing changed, and the outcome if the current trend continued.
+            (f) The expectations of experts and markets, with sources.
+            (g) Weigh each piece of evidence as strong, moderate, or weak, and justify every shift away from the outside view range.
+            (h) A brief scenario that produces an unexpectedly low outcome and one that produces an unexpectedly high outcome.
+
+            CHECKLIST before the numbers:
+            1. Blind spot: name the one scenario most likely to make this forecast look silly in hindsight.
+            2. Good forecasters are humble and set wide 90/10 intervals to account for unknown unknowns. Widen if your range is narrower than the historical range without a strong reason.
+            3. Check the units and the bounds stated above one more time.
 
             {self._get_conditional_disclaimer_if_necessary(question)}
-            You remind yourself that good forecasters are humble and set wide 90/10 confidence intervals to account for unknown unknowns.
 
             The last thing you write is your final answer as:
             "
@@ -490,16 +513,26 @@ class FallTemplateBot2026(ForecastBot):
             - Always start with a lower date chronologically and then increase from there.
             - Do NOT forget this. The dates must be written in chronological order starting at the earliest time at percentile 10 and increasing from there.
 
-            Before answering you write:
-            (a) The time left until the outcome to the question is known.
-            (b) The outcome if nothing changed.
-            (c) The outcome if the current trend continued.
-            (d) The expectations of experts and markets.
-            (e) A brief description of an unexpected scenario that results in a low outcome.
-            (f) A brief description of an unexpected scenario that results in a high outcome.
+            Work in two stages.
+
+            STAGE 1, OUTSIDE VIEW. Using the historical context:
+            (a) Paraphrase the question and resolution criteria in under 30 words, including the time window, the units, and exactly what is being measured. Bait-and-switch errors are costly.
+            (b) Reference class: what have comparable values been over comparable windows? Give the historical range and typical value. Pick the best fitting reference class.
+            (c) Timeframe: state how long until resolution and how much this quantity typically moves over windows of that length.
+            (d) State an outside view central estimate and a 10th to 90th percentile range.
+
+            STAGE 2, INSIDE VIEW. Using the current news:
+            (e) The outcome if nothing changed, and the outcome if the current trend continued.
+            (f) The expectations of experts and markets, with sources.
+            (g) Weigh each piece of evidence as strong, moderate, or weak, and justify every shift away from the outside view range.
+            (h) A brief scenario that produces an unexpectedly low outcome and one that produces an unexpectedly high outcome.
+
+            CHECKLIST before the numbers:
+            1. Blind spot: name the one scenario most likely to make this forecast look silly in hindsight.
+            2. Good forecasters are humble and set wide 90/10 intervals to account for unknown unknowns. Widen if your range is narrower than the historical range without a strong reason.
+            3. Check the units and the bounds stated above one more time.
 
             {self._get_conditional_disclaimer_if_necessary(question)}
-            You remind yourself that good forecasters are humble and set wide 90/10 confidence intervals to account for unknown unknowns.
 
             The last thing you write is your final answer as:
             "
