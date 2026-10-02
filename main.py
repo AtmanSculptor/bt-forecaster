@@ -749,7 +749,8 @@ if __name__ == "__main__":
     if run_mode == "tournament":
         seasonal_tournament_reports = asyncio.run(
             template_bot.forecast_on_tournament(
-                client.CURRENT_AI_COMPETITION_ID, return_exceptions=True
+                33121,  # Fall 2026 FutureEval. forecasting-tools 0.2.92 still points CURRENT_AI_COMPETITION_ID at Summer (33022).
+                return_exceptions=True,
             )
         )
         minibench_reports = asyncio.run(
