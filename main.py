@@ -125,6 +125,15 @@ class FallTemplateBot2026(ForecastBot):
     )
     _concurrency_limiter = asyncio.Semaphore(_max_concurrent_questions)
     _structure_output_validation_samples = 2
+    _forecaster_call_count = 0
+
+    def _pick_forecaster(self):
+        """Alternate between two model families so the ensemble is not one model agreeing with itself.
+        Odd calls use "default", even calls use "default2" when it is configured."""
+        self._forecaster_call_count += 1
+        if self._forecaster_call_count % 2 == 0 and "default2" in self._llms:
+            return self.get_llm("default2", "llm")
+        return self.get_llm("default", "llm")
 
     ##################################### RESEARCH #####################################
 
@@ -250,7 +259,7 @@ class FallTemplateBot2026(ForecastBot):
         question: BinaryQuestion,
         prompt: str,
     ) -> ReasonedPrediction[float]:
-        reasoning = await self.get_llm("default", "llm").invoke(prompt)
+        reasoning = await self._pick_forecaster().invoke(prompt)
         logger.info(f"Reasoning for URL {question.page_url}: {reasoning}")
         parsing_instructions = clean_indents(
             f"""
@@ -332,7 +341,7 @@ class FallTemplateBot2026(ForecastBot):
             {self._create_resolved_question_parsing_message()}
             """
         )
-        reasoning = await self.get_llm("default", "llm").invoke(prompt)
+        reasoning = await self._pick_forecaster().invoke(prompt)
         logger.info(f"Reasoning for URL {question.page_url}: {reasoning}")
         predicted_option_list: PredictedOptionList = await structure_output(
             text_to_structure=reasoning,
@@ -415,7 +424,7 @@ class FallTemplateBot2026(ForecastBot):
         question: NumericQuestion,
         prompt: str,
     ) -> ReasonedPrediction[NumericDistribution]:
-        reasoning = await self.get_llm("default", "llm").invoke(prompt)
+        reasoning = await self._pick_forecaster().invoke(prompt)
         logger.info(f"Reasoning for URL {question.page_url}: {reasoning}")
         parsing_instructions = clean_indents(
             f"""
@@ -511,7 +520,7 @@ class FallTemplateBot2026(ForecastBot):
         question: DateQuestion,
         prompt: str,
     ) -> ReasonedPrediction[NumericDistribution]:
-        reasoning = await self.get_llm("default", "llm").invoke(prompt)
+        reasoning = await self._pick_forecaster().invoke(prompt)
         logger.info(f"Reasoning for URL {question.page_url}: {reasoning}")
         parsing_instructions = clean_indents(
             f"""
@@ -724,7 +733,7 @@ if __name__ == "__main__":
     # uncomment and edit to pin specific models.
     template_bot = FallTemplateBot2026(
         research_reports_per_question=1,
-        predictions_per_research_report=3,
+        predictions_per_research_report=4,  # 2 Gemini + 2 Claude Haiku, median of four
         use_research_summary_to_forecast=False,
         publish_reports_to_metaculus=publish_to_metaculus,
         folder_to_save_reports_to=None,
@@ -733,6 +742,12 @@ if __name__ == "__main__":
         llms={
             "default": GeneralLlm(
                 model="openrouter/google/gemini-3.8-flash",
+                temperature=0.3,
+                timeout=120,
+                allowed_tries=6,
+            ),
+            "default2": GeneralLlm(
+                model="openrouter/anthropic/claude-haiku-4.5",
                 temperature=0.3,
                 timeout=120,
                 allowed_tries=6,
