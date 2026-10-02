@@ -174,8 +174,11 @@ class FallTemplateBot2026(ForecastBot):
             f"""
             You are an assistant to a superforecaster.
             The superforecaster will give you a question they intend to forecast on.
-            To be a great assistant, you generate a concise but detailed rundown of the most relevant news, including if the question would resolve Yes or No based on current information.
-            You do not produce forecasts yourself.
+            You do not produce forecasts yourself. Write two clearly labeled sections:
+
+            SECTION 1, HISTORICAL CONTEXT (for an outside view): how often has this kind of event happened over comparable time windows? Give concrete reference classes, counts, and dates. Note any rough figures a forecast could be tethered to.
+
+            SECTION 2, CURRENT NEWS (for an inside view): a concise but detailed rundown of the most relevant recent news, with dates and named sources, including whether the question would resolve Yes or No based on current information. Separate facts from opinions and say which sources are reliable.
 
             Question:
             {question.question_text}
@@ -215,13 +218,25 @@ class FallTemplateBot2026(ForecastBot):
 
             Today is {datetime.now().strftime("%Y-%m-%d")}.
 
-            Before answering you write:
-            (a) The time left until the outcome to the question is known.
-            (b) The status quo outcome if nothing changed.
-            (c) A brief description of a scenario that results in a No outcome.
-            (d) A brief description of a scenario that results in a Yes outcome.
+            Work in two stages.
 
-            You write your rationale remembering that good forecasters put extra weight on the status quo outcome since the world changes slowly most of the time.
+            STAGE 1, OUTSIDE VIEW. Using the historical context:
+            (a) Paraphrase the title and resolution criteria in under 30 words, including the time window. Check that your analysis matches exactly how the criteria are defined. Bait-and-switch errors are costly.
+            (b) Reference class: name a few possible reference classes, judge how well each fits, pick the best one.
+            (c) Timeframe: state how long until resolution and how often the event happens over windows of that length.
+            (d) State an outside view base rate as a percentage.
+
+            STAGE 2, INSIDE VIEW. Using the current news:
+            (e) Weigh each piece of evidence as strong (multiple independent reliable sources, clear causal mechanism, hard-to-change structural factors), moderate (single reliable source, indirect causal link, trend with momentum), or weak (anecdote, speculation, volatile short-term indicator).
+            (f) Justify every shift away from the base rate. A large shift needs a reason the reference class no longer applies.
+            (g) The status quo outcome if nothing changed, and a brief scenario for No and a brief scenario for Yes.
+
+            CHECKLIST before the number:
+            1. Write one line: "X out of 100 times, [resolution criteria] happens." Does it match your reasoning?
+            2. List the three to five pieces of evidence your forecast hinges on, under 20 words each, and confirm each is factual.
+            3. Blind spot: name the one scenario most likely to make this forecast look silly in hindsight.
+            4. Status quo: the world changes slowly most of the time. Consider a nudge toward the status quo outcome.
+            5. 90% is 9 to 1 odds and 99% is 99 to 1. Do not round to a neat multiple of 5 if the evidence says otherwise.
             {self._get_conditional_disclaimer_if_necessary(question)}
 
             The last thing you write is your final answer as: "Probability: ZZ%", 0-100
