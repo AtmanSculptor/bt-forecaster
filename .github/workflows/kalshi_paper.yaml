@@ -1,0 +1,38 @@
+name: Kalshi paper test (no orders, log only)
+
+# Once a day, forecast up to 8 Kalshi count/base-rate markets with namaste's pipeline
+# and log our probability next to the market price on BT's server. No trading.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 15 * * *"   # 15:23 UTC = 8:23am Arizona
+
+concurrency:
+  group: kalshi-paper
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  paper:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+      - name: Install dependencies
+        run: poetry install --no-interaction --no-root
+      - name: Forecast and log
+        run: poetry run python kalshi_paper.py --max 8
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          BT_KEY: ${{ secrets.BT_KEY }}
