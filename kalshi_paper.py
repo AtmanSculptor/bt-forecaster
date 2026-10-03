@@ -63,10 +63,10 @@ def kget(path: str, **params):
 
 
 def door(method_path: str, body: str = "") -> str:
-    key = os.getenv("BT_KEY", "")
+    key = os.getenv("BT_KEY", "").strip().lstrip("\ufeff")
     req = urllib.request.Request(
         BT_DOOR + method_path, data=body.encode("utf-8"), method="POST",
-        headers={"X-BT-Key": key, "Content-Type": "text/plain; charset=utf-8"},
+        headers={"X-BT-Key": key, "Content-Type": "text/plain; charset=utf-8", "User-Agent": "namaste-paper/0.1"},
     )
     with urllib.request.urlopen(req, timeout=30) as r:
         return r.read().decode()
