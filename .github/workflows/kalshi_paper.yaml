@@ -4,6 +4,11 @@ name: Kalshi paper test (no orders, log only)
 # and log our probability next to the market price on BT's server. No trading.
 on:
   workflow_dispatch:
+    inputs:
+      max:
+        description: Max markets to forecast this run
+        default: '8'
+        required: false
   schedule:
     - cron: "23 15 * * *"   # 15:23 UTC = 8:23am Arizona
 
@@ -32,7 +37,7 @@ jobs:
       - name: Install dependencies
         run: poetry install --no-interaction --no-root
       - name: Forecast and log
-        run: poetry run python kalshi_paper.py --max 8
+        run: poetry run python kalshi_paper.py --max ${{ github.event.inputs.max || '8' }}
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           BT_KEY: ${{ secrets.BT_KEY }}
